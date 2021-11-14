@@ -1,7 +1,6 @@
 import json
 import discord
 from errors import GuildErrors
-from discord.utils import get
 
 
 class Guild_Manager:
