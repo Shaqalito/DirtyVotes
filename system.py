@@ -37,7 +37,7 @@ class Guild_Manager:
     def store(self):
         self.reload()
         self.guilds[self.guild.id] = self.to_dict()
-        with open("sysem.json", "w") as f:
+        with open("system.json", "w") as f:
             json.dump(self.system, f, indent=4)
         self.reload()
         self.set_attributes()
