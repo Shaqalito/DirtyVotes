@@ -80,13 +80,13 @@ class Guild_Manager:
         return self.authorized_roles
 
     @classmethod
-    def get_all_guilds(self):
+    def get_all_guilds(self, client):
         with open("system.json", "r") as f:
             self.system = json.load(f)
             self.guilds = self.system["guilds"]
 
         guilds_ids = []
         for guild_id in self.guilds:
-            guilds_ids.append(get(self.guild.roles, id=guild_id))
+            guilds_ids.append(int(guild_id))
 
         return guilds_ids
