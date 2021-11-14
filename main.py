@@ -57,11 +57,13 @@ async def slash_button_ctx(ctx, client):  # Get a Discord context from a SlashCo
 
 
 # ON GUILD JOIN
+@client.event()
 async def on_guild_join(guild):
     Guild_Manager(guild)
 
 
 # ON GUILD REMOVE
+@client.event()
 async def on_guild_remove(guild):
     Guild_Manager(guild).del_guild()
 
