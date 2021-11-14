@@ -80,7 +80,7 @@ class Guild_Manager:
         return self.authorized_roles
 
     @classmethod
-    def get_all_guilds(self, client):
+    def get_all_guilds(self):
         with open("system.json", "r") as f:
             self.system = json.load(f)
             self.guilds = self.system["guilds"]
