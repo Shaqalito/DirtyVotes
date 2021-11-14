@@ -10,6 +10,7 @@ from keep_alive import keep_alive
 import discord
 from system import Guild_Manager, GuildErrors
 
+
 # Clear shortcut function
 def clear():
     os.system("clear")
