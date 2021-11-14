@@ -377,9 +377,9 @@ async def get_poll():  # Gets all polls interactions
             await res.message.edit(embed=em)  # Then we sen the updated poll embed
 
 
-@slash.slash(name="Source_Code", description="Allez voir le code source sur GitHub !", guild_ids=Guild_Manager.get_all_guilds())
-async def Source_Code(sctx):
-    embed = Embed(title="Bot Source Code", description="[**GitHub Repository of Source Code**](https://github.com/Shaqalito/DirtyVotes)\n[**My Profile**](https://github.com/Shaqalito)", color=bot_color)
+@slash.slash(name="Doc", description="Code Source, Manuel et Invitations", guild_ids=Guild_Manager.get_all_guilds())
+async def Doc(sctx):
+    embed = Embed(title="Bot Source Code", description="[**GitHub Repository of Source Code**](https://github.com/Shaqalito/DirtyVotes)\n[**My Profile**](https://github.com/Shaqalito)\n[**Manuel**](https://docs.google.com/document/d/1G5D5VPSxPdHqOK-KZx06OZN1cOMldHzQKkxx-2iMC48/edit?usp=sharing)\n[**Inviter le Bot**](https://discord.com/api/oauth2/authorize?client_id=909477659136909333&permissions=8&scope=bot%20applications.commands)", color=bot_color)
     await sctx.send(embed=embed, hidden=True)
 
 keep_alive()
