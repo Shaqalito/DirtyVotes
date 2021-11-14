@@ -379,7 +379,7 @@ async def get_poll():  # Gets all polls interactions
 
 @slash.slash(name="Doc", description="Code Source, Manuel et Invitations", guild_ids=Guild_Manager.get_all_guilds())
 async def Doc(sctx):
-    embed = Embed(title="Bot Documentation", description="[**GitHub Repository of Source Code**](https://github.com/Shaqalito/DirtyVotes)\n[**My Profile**](https://github.com/Shaqalito)\n[**Manuel**](https://docs.google.com/document/d/1G5D5VPSxPdHqOK-KZx06OZN1cOMldHzQKkxx-2iMC48/edit?usp=sharing)\n[**Inviter le Bot**](https://discord.com/api/oauth2/authorize?client_id=909477659136909333&permissions=8&scope=bot%20applications.commands)", color=bot_color)
+    embed = Embed(title="Bot Documentation", description="[**GitHub Repository du Source Code**](https://github.com/Shaqalito/DirtyVotes)\n[**Mon Profil**](https://github.com/Shaqalito)\n[**Manuel du Bot**](https://docs.google.com/document/d/1G5D5VPSxPdHqOK-KZx06OZN1cOMldHzQKkxx-2iMC48/edit?usp=sharing)\n[**Inviter le Bot**](https://discord.com/api/oauth2/authorize?client_id=909477659136909333&permissions=8&scope=bot%20applications.commands)", color=bot_color)
     await sctx.send(embed=embed, hidden=True)
 
 keep_alive()
