@@ -97,7 +97,7 @@ options = [
 
 
 # MANAGE AUTHORIZED ROLES
-@slash.slash(name="Manage_Authorized_Roles", description="Choisissez les rôles autorisés à utiliser les commandes du bot (Ne s'applique pas a /see_polls)", guild_ids=guilds_ids, options=options)
+@slash.slash(name="Manage_Authorized_Roles", description="Choisissez les rôles autorisés à utiliser les commandes du bot (Ne s'applique pas a /see_polls)", guild_ids=Guild_Manager.get_all_guilds(), options=options)
 async def Manage_Authorized_Roles(sctx, role, action):
     if not sctx.author.server_permissions.administrator or not check_for_auth_roles(sctx.author):
         embed = Embed(title="Access Denied. Missing permission or role.", color=bot_color)
@@ -170,7 +170,7 @@ options = [
 
 
 @slash.slash(
-    name="Poll", description="Create Polls", guild_ids=guilds_ids, options=options
+    name="Poll", description="Create Polls", guild_ids=Guild_Manager.get_all_guilds(), options=options
 )
 async def poll(ctx, title, choices, locked=False, hidden=False):
     sctx = ctx  # Changes name of context object (ctx) to sctx (slash context) for proper separation
@@ -245,7 +245,7 @@ async def fetch_poll_options():  # Fetches all currently stored polls to display
     return options  # Once the parsing is over we return the results in the form of a list which is the options list
 
 
-@slash.slash(name="End_Poll", description="Stop a poll", guild_ids=guilds_ids)
+@slash.slash(name="End_Poll", description="Stop a poll", guild_ids=Guild_Manager.get_all_guilds())
 async def end_poll(ctx):  # Command that lets you end polls that are stored in the data file and currently running
     sctx = ctx  # We rename the ctx (discord context) to sctx (SlashContext) for better readability
     if not check_for_auth_roles(sctx.author):  # Checking for staff roles in the command author's roles
@@ -316,7 +316,7 @@ async def fetch_polls():  # Fetch the polls to display their title total number 
     return polls_list  # Return the polls list
 
 
-@slash.slash(name="See_Polls", description="See all active polls", guild_ids=guilds_ids)
+@slash.slash(name="See_Polls", description="See all active polls", guild_ids=Guild_Manager.get_all_guilds())
 async def see_polls(ctx):  # Commands that lets you see all the running polls
     polls_list = await fetch_polls()  # Get polls list
 
@@ -373,6 +373,9 @@ async def get_poll():  # Gets all polls interactions
             if locked:  # Check if the locked parameter is True
                 em.set_footer(text="Une fois que vous avez fait votre choix vous ne pourrez plus le modifier. Réfléchissez !")  # If so we add a message to notify user
             await res.message.edit(embed=em)  # Then we sen the updated poll embed
+
+
+@slash.slash(name="Source_Code", description="Allez voir le code source sur GitHub !", guild_ids=Guild_Manager.get_all_guilds())
 
 
 keep_alive()
