@@ -376,7 +376,9 @@ async def get_poll():  # Gets all polls interactions
 
 
 @slash.slash(name="Source_Code", description="Allez voir le code source sur GitHub !", guild_ids=Guild_Manager.get_all_guilds())
-
+async def Source_Code(sctx):
+    embed = Embed(title="Bot Source Code", description="[**GitHub Repository of Source Code**](https://github.com/Shaqalito/DirtyVotes)\n[**My Profile**](https://github.com/Shaqalito)", color=bot_color)
+    await sctx.send(embed=embed, hidden=True)
 
 keep_alive()
 client.run(os.getenv("TOKEN"))
