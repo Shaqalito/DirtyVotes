@@ -33,7 +33,7 @@ async def on_ready():
 
 
 guilds_ids = Guild_Manager.get_all_guilds()  # Guild id for convenience
-bot_color = 0x642589  # The hex color code of the bot (WILL BE CHANGED TO BE DYNAMICALLY SETABLE WITH A SLASH COMMAND)
+bot_color = 0x4EA9EC  # The hex color code of the bot (WILL BE CHANGED TO BE DYNAMICALLY SETABLE WITH A SLASH COMMAND)
 
 
 # CHECK FOR STAFF ROLES
