@@ -290,7 +290,7 @@ async def end_poll(ctx):  # Command that lets you end polls that are stored in t
     em = Embed(title=f"Result For Poll | {poll['title']}", description=desc, color=bot_color, timestamp=datetime.datetime.utcnow())  # Create a new embed to send the results of the poll
     em.add_field(name="Total Sigular Answers", value=poll["total"])  # Add the number of total singular answers as a field
 
-    del polls[key]  # We then delete the disctionary of the poll from the file
+    del polls[str(sctx.guild.id)][key]  # We then delete the disctionary of the poll from the file
 
     with open("polls.json", "w") as f:  # We open the polls.json file in write mode
         json.dump(polls, f, indent=4)  # Then we dump (write) the new data inside of it
