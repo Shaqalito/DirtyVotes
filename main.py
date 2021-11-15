@@ -346,7 +346,6 @@ async def get_poll():  # Gets all polls interactions
 
         res = await client.wait_for("select_option", check=lambda i: any(str(i.message.id) == key for key in polls[str(i.author.guild.id)].keys()))  # Wait for an interaction and check if interaction
         values = res.values  # Get selected option                                                                           # message's ID is in polls.json
-        print(res.author.guild.id)
 
         if str(res.message.id) in polls[str(res.author.guild.id)].keys():  # If the message ID is in the keys of polls.json
             poll = polls[str(res.author.guild.id)][str(res.message.id)]  # Get the poll
