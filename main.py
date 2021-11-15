@@ -344,7 +344,7 @@ async def get_poll():  # Gets all polls interactions
         with open("polls.json", "r") as f:  # Open polls.json file
             polls = json.load(f)  # Load file data into a python readable json object
 
-        res = await client.wait_for("select_option", check=lambda i: any(str(i.message.id) == key for key in polls.keys()))  # Wait for an interaction and check if interaction
+        res = await client.wait_for("select_option", check=lambda i: any(str(i.message.id) == key for key in polls[str(res.author.guild.id)].keys()))  # Wait for an interaction and check if interaction
         values = res.values  # Get selected option                                                                           # message's ID is in polls.json
         print(res.author.guild.id)
 
