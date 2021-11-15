@@ -27,15 +27,14 @@ class Guild_Manager:
     def reload(self):
         with open("system.json", "r") as f:
             self.system = json.load(f)
-            self.guilds = self.system["guilds"]
         try:
-            self.guild_dict = self.guilds[str(self.guild.id)]
+            self.guild_dict = self.system["guilds"][str(self.guild.id)]
         except KeyError:
             pass
 
     def store(self):
         self.reload()
-        self.system["guilds"][self.guild.id] = self.to_dict()
+        self.system["guilds"][str(self.guild.id)] = self.to_dict()
         with open("system.json", "w") as f:
             json.dump(self.system, f, indent=4)
         self.reload()
