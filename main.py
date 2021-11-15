@@ -183,7 +183,7 @@ options = [
     name="Poll", description="Create Polls", guild_ids=Guild_Manager.get_all_guilds(), options=options
 )
 async def poll(ctx, title, choices, locked=False, hidden=False):
-    await ctx.send("Bot is in maintnance, sorry for inconvenient.")
+    await ctx.send("Bot is in maintnance, sorry for inconvenient.", hidden=True)
     return
     sctx = ctx  # Changes name of context object (ctx) to sctx (slash context) for proper separation
     if not check_for_auth_roles(sctx.author):  # Check for staff roles in the command author's role
@@ -259,7 +259,7 @@ async def fetch_poll_options():  # Fetches all currently stored polls to display
 
 @slash.slash(name="End_Poll", description="Stop a poll", guild_ids=Guild_Manager.get_all_guilds())
 async def end_poll(ctx):  # Command that lets you end polls that are stored in the data file and currently running
-    await ctx.send("Bot is in maintnance, sorry for inconvenient.")
+    await ctx.send("Bot is in maintnance, sorry for inconvenient.", hidden=True)
     return
     sctx = ctx  # We rename the ctx (discord context) to sctx (SlashContext) for better readability
     if not check_for_auth_roles(sctx.author):  # Checking for staff roles in the command author's roles
@@ -332,7 +332,7 @@ async def fetch_polls():  # Fetch the polls to display their title total number 
 
 @slash.slash(name="See_Polls", description="See all active polls", guild_ids=Guild_Manager.get_all_guilds())
 async def see_polls(ctx):  # Commands that lets you see all the running polls
-    await ctx.send("Bot is in maintnance, sorry for inconvenient.")
+    await ctx.send("Bot is in maintnance, sorry for inconvenient.", hidden=True)
     return
     polls_list = await fetch_polls()  # Get polls list
 
