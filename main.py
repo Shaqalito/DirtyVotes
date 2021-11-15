@@ -103,8 +103,6 @@ options = [
 # MANAGE AUTHORIZED ROLES
 @slash.slash(name="Manage_Authorized_Roles", description="Choisissez les rôles autorisés à utiliser les commandes du bot (Ne s'applique pas a /see_polls)", guild_ids=Guild_Manager.get_all_guilds(), options=options)
 async def Manage_Authorized_Roles(sctx, role, action):
-    await sctx.send("Bot is in maintnance, sorry for inconvenient.")
-    return
     if check_for_auth_roles(sctx.author) or sctx.author.guild_permissions.administrator or sctx.author.top_role.permissions.administrator:
         if action == "add":
             try:
