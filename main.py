@@ -101,27 +101,27 @@ options = [
 # MANAGE AUTHORIZED ROLES
 @slash.slash(name="Manage_Authorized_Roles", description="Choisissez les rôles autorisés à utiliser les commandes du bot (Ne s'applique pas a /see_polls)", guild_ids=Guild_Manager.get_all_guilds(), options=options)
 async def Manage_Authorized_Roles(sctx, role, action):
-    if not check_for_auth_roles(sctx.author) or not sctx.author.guild_permissions.administrator or not sctx.author.top_role.permissions.administrator:
+    if check_for_auth_roles(sctx.author) or sctx.author.guild_permissions.administrator or sctx.author.top_role.permissions.administrator:
+        if action == "add":
+            try:
+                Guild_Manager(sctx.guild).add_auth_role(role)
+                embed = Embed(description=f"{role.mention} ajouté à la liste des rôles autorisés.", color=bot_color)
+                await sctx.send(embed=embed, hidden=True)
+            except GuildErrors.AuthRoleAlreadyAdded:
+                embed = Embed(title="Ce rôle est déjà autorisé", color=bot_color)
+                await sctx.send(embed=embed, hidden=True)
+        elif action == "del":
+            try:
+                Guild_Manager(sctx.guild).del_auth_role(role)
+                embed = Embed(description=f"{role.mention} supprimé de la liste des rôles autorisés.", color=bot_color)
+                await sctx.send(embed=embed, hidden=True)
+            except GuildErrors.AuthRoleNotInList:
+                embed = Embed(title="Ce rôle n'est déjà pas dans la liste", color=bot_color)
+                await sctx.send(embed=embed, hidden=True)
+    else:
         embed = Embed(title="Access Denied. Missing permission or role.", color=bot_color)
         await sctx.send(embed=embed, hidden=True)
         return
-
-    if action == "add":
-        try:
-            Guild_Manager(sctx.guild).add_auth_role(role)
-            embed = Embed(description=f"{role.mention} ajouté à la liste des rôles autorisés.", color=bot_color)
-            await sctx.send(embed=embed, hidden=True)
-        except GuildErrors.AuthRoleAlreadyAdded:
-            embed = Embed(title="Ce rôle est déjà autorisé", color=bot_color)
-            await sctx.send(embed=embed, hidden=True)
-    elif action == "del":
-        try:
-            Guild_Manager(sctx.guild).del_auth_role(role)
-            embed = Embed(description=f"{role.mention} supprimé de la liste des rôles autorisés.", color=bot_color)
-            await sctx.send(embed=embed, hidden=True)
-        except GuildErrors.AuthRoleNotInList:
-            embed = Embed(title="Ce rôle n'est déjà pas dans la liste", color=bot_color)
-            await sctx.send(embed=embed, hidden=True)
 
 
 # POLL
