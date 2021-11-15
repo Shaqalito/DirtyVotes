@@ -349,10 +349,10 @@ async def get_poll():  # Gets all polls interactions
         print(res.author.guild.id)
 
         if str(res.message.id) in polls[str(res.author.guild.id)].keys():  # If the message ID is in the keys of polls.json
-            poll = polls[str(res.message.id)]  # Get the poll
-            users = polls[str(res.message.id)]["users"]  # Get all the users that voted
-            locked = polls[str(res.message.id)]["locked"]  # Get if the poll is locked or not
-            hidden = polls[str(res.message.id)]["hidden"]  # Get id the poll is hidden or not
+            poll = polls[str(res.author.guild.id)][str(res.message.id)]  # Get the poll
+            users = polls[str(res.author.guild.id)][str(res.message.id)]["users"]  # Get all the users that voted
+            locked = polls[str(res.author.guild.id)][str(res.message.id)]["locked"]  # Get if the poll is locked or not
+            hidden = polls[str(res.author.guild.id)][str(res.message.id)]["hidden"]  # Get id the poll is hidden or not
 
             if str(res.author.id) in users.keys():  # Check if user has already voted
                 if locked:  # If so check if poll is locked
