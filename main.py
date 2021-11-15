@@ -150,6 +150,7 @@ def poll_bar(msg_id, guild_id, hidden=False):  # Calculates all lengths of choic
                 desc += f"**{option.capitalize()}**\n{option_bar} **{option_pct}%**\n\n"  # We add the percentage of choice to the description
             except ZeroDivisionError:
                 desc += f"**{option.capitalize()}**\n**0%**\n\n"  # If the votes are 0 it simply adds a 0 to the choice
+        desc += f"Total Votes: {total}"
     return desc  # As said above returns the description of poll
 
 
