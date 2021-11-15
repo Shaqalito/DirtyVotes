@@ -1,6 +1,7 @@
 import json
 import discord
 from errors import GuildErrors
+from discord.utils import get
 
 
 class Guild_Manager:
@@ -75,7 +76,10 @@ class Guild_Manager:
             raise GuildErrors.AuthRoleNotInList("This role was not in the list.")
 
     def get_auth_roles(self):
-        return self.authorized_roles
+        authorized_roles_list = []
+        for role_id in self.authorized_roles:
+            authorized_roles_list.append(get(self.guild.roles, id=role_id))
+        return authorized_roles_list
 
     @classmethod
     def get_all_guilds(self):
