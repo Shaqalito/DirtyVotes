@@ -130,11 +130,11 @@ async def Manage_Authorized_Roles(sctx, role, action):
 
 # POLL
 # POLL BAR
-def poll_bar(msg_id, hidden=False):  # Calculates all lengths of choice bars as well as percentages of votes for each choices returns the description of a poll
+def poll_bar(msg_id, guild_id, hidden=False):  # Calculates all lengths of choice bars as well as percentages of votes for each choices returns the description of a poll
     with open("polls.json", "r") as f:  # Openting and getting data from polls.json in read only mode
         polls = json.load(f)
     desc = ""  # Preparing description string
-    poll = polls[str(msg_id)]  # Getting poll dictionary
+    poll = polls[str(guild_id)][str(msg_id)]  # Getting poll dictionary
     total = poll["total"]  # Total votes
 
     if hidden:  # Checks if the poll is 'hidden' so it wont show the percentages of votes and the bars will be hidden too if True
@@ -183,8 +183,6 @@ options = [
     name="Poll", description="Create Polls", guild_ids=Guild_Manager.get_all_guilds(), options=options
 )
 async def poll(ctx, title, choices, locked=False, hidden=False):
-    await ctx.send("Bot is in maintnance, sorry for inconvenient.", hidden=True)
-    return
     sctx = ctx  # Changes name of context object (ctx) to sctx (slash context) for proper separation
     if not check_for_auth_roles(sctx.author):  # Check for staff roles in the command author's role
         em = Embed(title="Vous n'avez pas les permissions d'utiliser cette commande")
@@ -235,7 +233,7 @@ async def poll(ctx, title, choices, locked=False, hidden=False):
 
     with open("polls.json", "r") as f:  # Here we open the polls.json file in read mode
         polls = json.load(f)  # We load the file content in a python readable json object
-    polls[str(msg.id)] = new_poll  # We add the poll to the file by having the poll message ID as the key and the dictionary as the value
+    polls[str(sctx.guild.id)][str(msg.id)] = new_poll  # We add the poll to the file by having the poll message ID as the key and the dictionary as the value
     with open("polls.json", "w") as f:  # Then we open the polls.json file in write mode
         json.dump(polls, f, indent=4)  # And dump (write) the data into the file
 
@@ -243,12 +241,12 @@ async def poll(ctx, title, choices, locked=False, hidden=False):
 
 
 # STOP POLL
-async def fetch_poll_options():  # Fetches all currently stored polls to display their name
+async def fetch_poll_options(guild_id):  # Fetches all currently stored polls to display their name
     with open("polls.json", "r") as f:  # Open polls.json file in read mode
         polls = json.load(f)  # Load the json file into a python readable json object
 
     options = []  # Create an empty list to store all the options (options will be the polls that can be ended)
-    for key in polls.keys():  # For each key in the poll's json object
+    for key in polls[str(guild_id)].keys():  # For each key in the poll's json object
         msg_id = key  # We get the message ID which is the key
         poll = polls[key]  # We get the poll dictionary
         title = poll["title"]  # And the title of the poll
@@ -259,8 +257,6 @@ async def fetch_poll_options():  # Fetches all currently stored polls to display
 
 @slash.slash(name="End_Poll", description="Stop a poll", guild_ids=Guild_Manager.get_all_guilds())
 async def end_poll(ctx):  # Command that lets you end polls that are stored in the data file and currently running
-    await ctx.send("Bot is in maintnance, sorry for inconvenient.", hidden=True)
-    return
     sctx = ctx  # We rename the ctx (discord context) to sctx (SlashContext) for better readability
     if not check_for_auth_roles(sctx.author):  # Checking for staff roles in the command author's roles
         em = Embed(title="Vous n'avez pas les permissions d'utiliser cette commande")
@@ -277,7 +273,7 @@ async def end_poll(ctx):  # Command that lets you end polls that are stored in t
         return
 
     em = Embed(title="Chose a poll to end", color=bot_color)  # In the next two lines we create an embed and fetch all the polls that can be ended
-    options = await fetch_poll_options()
+    options = await fetch_poll_options(sctx.author.guild.id)
     components = [Select(placeholder="Select a poll to end", options=options)]  # Then we create our components list containing a Select object with the polls as options
 
     msg = await ctx.send(embed=em, components=components)  # We send the message containing the Select and store it into a variable
@@ -288,7 +284,7 @@ async def end_poll(ctx):  # Command that lets you end polls that are stored in t
     poll = polls[key]  # We get the poll dictionary
     message_id = key  # We restore the key into a new variable for readability
     channel = client.get_channel(poll["channel_id"])  # We get the channel object of the poll's channel
-    desc = poll_bar(key)  # We call poll_bar to generate the bar for the final results
+    desc = poll_bar(key, sctx.guild.id)  # We call poll_bar to generate the bar for the final results
 
     p_msg = await channel.fetch_message(message_id)  # We get the poll message as p_msg
     await p_msg.delete()  # We delete the poll message
@@ -307,13 +303,13 @@ async def end_poll(ctx):  # Command that lets you end polls that are stored in t
 
 
 # SEE POLLS
-async def fetch_polls():  # Fetch the polls to display their title total number of choices and total votes, the title is a hyperlink to the poll
+async def fetch_polls(guild_id):  # Fetch the polls to display their title total number of choices and total votes, the title is a hyperlink to the poll
     with open("polls.json", "r") as f:  # Open the polls.json file
         polls = json.load(f)  # Load the file data into a python readable json object
 
     polls_list = ""  # Create and empty string to store the list of polls later
 
-    for key in polls.keys():  # iterate through reach poll key
+    for key in polls[str(guild_id)].keys():  # iterate through reach poll key
         poll = polls[key]  # Get the poll dictionary
         title = poll["title"]  # Get the poll title
         msg_id = key  # Store the key into msg_id for readability
@@ -332,9 +328,7 @@ async def fetch_polls():  # Fetch the polls to display their title total number 
 
 @slash.slash(name="See_Polls", description="See all active polls", guild_ids=Guild_Manager.get_all_guilds())
 async def see_polls(ctx):  # Commands that lets you see all the running polls
-    await ctx.send("Bot is in maintnance, sorry for inconvenient.", hidden=True)
-    return
-    polls_list = await fetch_polls()  # Get polls list
+    polls_list = await fetch_polls(ctx.guild.id)  # Get polls list
 
     if polls_list is None:  # Check if polls list is None (Empty)
         em = Embed(title="There is no polls", color=bot_color)
@@ -355,7 +349,7 @@ async def get_poll():  # Gets all polls interactions
         res = await client.wait_for("select_option", check=lambda i: any(str(i.message.id) == key for key in polls.keys()))  # Wait for an interaction and check if interaction
         values = res.values  # Get selected option                                                                           # message's ID is in polls.json
 
-        if str(res.message.id) in polls.keys():  # If the message ID is in the keys of polls.json
+        if str(res.message.id) in polls[str(res.author.guild.id)].keys():  # If the message ID is in the keys of polls.json
             poll = polls[str(res.message.id)]  # Get the poll
             users = polls[str(res.message.id)]["users"]  # Get all the users that voted
             locked = polls[str(res.message.id)]["locked"]  # Get if the poll is locked or not
@@ -381,9 +375,9 @@ async def get_poll():  # Gets all polls interactions
                 json.dump(polls, f, indent=4)  # Dump (write) new data (changes) into polls.json
 
             if not hidden:  # Check if poll has the hidden option to False
-                desc = poll_bar(str(res.message.id))  # If so we call the normal poll_bar() function
+                desc = poll_bar(str(res.message.id), res.author.guild.id)  # If so we call the normal poll_bar() function
             else:
-                desc = poll_bar(str(res.message.id), hidden=True)  # If not we call it with the hidden parameter to True
+                desc = poll_bar(str(res.message.id), res.author.guild.id, hidden=True)  # If not we call it with the hidden parameter to True
             em = Embed(title=poll["title"], description=desc, color=bot_color)  # We add the descrtiption to the poll embed
 
             if locked:  # Check if the locked parameter is True
