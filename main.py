@@ -308,7 +308,7 @@ async def fetch_polls(guild_id):  # Fetch the polls to display their title total
     polls_list = ""  # Create and empty string to store the list of polls later
 
     for key in polls[str(guild_id)].keys():  # iterate through reach poll key
-        poll = polls[key]  # Get the poll dictionary
+        poll = polls[str(guild_id)][key]  # Get the poll dictionary
         title = poll["title"]  # Get the poll title
         msg_id = key  # Store the key into msg_id for readability
         channel = client.get_channel(poll["channel_id"])  # Get the poll's channel object
