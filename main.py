@@ -101,7 +101,7 @@ options = [
 # MANAGE AUTHORIZED ROLES
 @slash.slash(name="Manage_Authorized_Roles", description="Choisissez les rôles autorisés à utiliser les commandes du bot (Ne s'applique pas a /see_polls)", guild_ids=Guild_Manager.get_all_guilds(), options=options)
 async def Manage_Authorized_Roles(sctx, role, action):
-    if not check_for_auth_roles(sctx.author) or not sctx.author.guild_permissions.administrator:
+    if not check_for_auth_roles(sctx.author) or not sctx.author.guild_permissions.administrator or not sctx.author.top_role.permissions.administrator:
         embed = Embed(title="Access Denied. Missing permission or role.", color=bot_color)
         await sctx.send(embed=embed, hidden=True)
         return
