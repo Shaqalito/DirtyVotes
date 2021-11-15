@@ -44,6 +44,11 @@ class Guild_Manager:
     def add_guild(self):
         self.set_attributes()
         self.store()
+        with open("polls.json", "r") as f:
+            polls = json.load(f)
+        polls[str(self.guild.id)] = {}
+        with open("polls.json", "w") as f:
+            json.dump(polls, f, indent=4)
         return self
 
     def del_guild(self):
@@ -54,6 +59,14 @@ class Guild_Manager:
             del self.guilds[str(self.guild.id)]
             with open("system.json", "w") as f:
                 json.dump(self.system, f, indent=4)
+        except KeyError:
+            pass
+        try:
+            with open("polls.json", "r") as f:
+                polls = json.load(f)
+            del polls[str(self.guild.id)]
+            with open("polls.json", "w") as f:
+                json.dump(polls, f, indent=4)
         except KeyError:
             pass
 
