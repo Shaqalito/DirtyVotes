@@ -39,6 +39,8 @@ bot_color = 0x24C29C  # The hex color code of the bot (WILL BE CHANGED TO BE DYN
 # CHECK FOR STAFF ROLES
 def check_for_auth_roles(user):
     auth_roles = Guild_Manager(user.guild).get_auth_roles()
+    if auth_roles == []:
+        return True
     if any(role in user.roles for role in auth_roles):  # Check for authorized roles in user roles
         return True
     else:
