@@ -34,7 +34,7 @@ async def on_ready():
     activeservers = client.guilds
     print("On servers:\n")
     for server in activeservers:
-        print(f"NAME: {server.name}\nID: {server.id}")
+        print(f"NAME: {server.name}\nID: {server.id}\n")
 
 
 guilds_ids = Guild_Manager.get_all_guilds()  # Guild id for convenience
