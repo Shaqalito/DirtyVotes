@@ -29,7 +29,8 @@ slash = SlashCommand(client, sync_commands=True)  # Initiating slash command for
 async def on_ready():
     DiscordComponents(client)  # Initiate Discord Components
     clear()  # Clear Console
-    get_poll.start()  # Start both tasks get_poll and update_db_task
+    get_poll.start()  # Start both tasks get_poll and check_poll_inactivity
+    check_poll_inactivity.start()
     print(f"Logged in as {client.user}")
     print(f"Ping (ms): {round(client.latency * 1000)}")
     activeservers = client.guilds
