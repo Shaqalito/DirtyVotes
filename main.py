@@ -254,7 +254,7 @@ async def fetch_poll_options(guild_id):  # Fetches all currently stored polls to
         msg_id = key  # We get the message ID which is the key
         poll = polls[str(guild_id)][key]  # We get the poll dictionary
         title = poll["title"]  # And the title of the poll
-        options.append(SelectOption(label=title[:100], value=msg_id, description=title))  # We then create and append a SelectOption that contains the title of the poll
+        options.append(SelectOption(label=title[:100], value=msg_id, description=title[:100]))  # We then create and append a SelectOption that contains the title of the poll
 
     return options  # Once the parsing is over we return the results in the form of a list which is the options list
 
