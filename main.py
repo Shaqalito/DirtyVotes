@@ -203,7 +203,7 @@ async def poll(ctx, title, choices, locked=False, hidden=False):
         "users": {},
         "locked": locked,  # <-- Locked parameter
         "hidden": hidden,  # <-- Hidden parameter
-        "end_at": time.time() + (60 * 60 * 24)
+        "end_time": time.time() + (60 * 60 * 24)
     }
 
     o = 0  # o is for options iteration to keep track of options count
