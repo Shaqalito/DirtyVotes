@@ -8,7 +8,7 @@ from discord_slash import SlashCommand
 from discord.ext import commands, tasks
 from keep_alive import keep_alive
 import discord
-from system import Guild_Manager, GuildErrors
+from system import Guild_Manager, GuildErrors, time
 import asyncio
 
 
@@ -203,6 +203,7 @@ async def poll(ctx, title, choices, locked=False, hidden=False):
         "users": {},
         "locked": locked,  # <-- Locked parameter
         "hidden": hidden,  # <-- Hidden parameter
+        "end_at": time.time() + (60 * 60 * 24)
     }
 
     o = 0  # o is for options iteration to keep track of options count
@@ -373,11 +374,13 @@ async def get_poll():  # Gets all polls interactions
                 poll["options"][user_choice] -= 1  # Substract one to the count of previous choice
                 poll["options"][values[0]] += 1  # Add one to the count of new choice
                 users[str(res.author.id)] = values[0]  # Change user's choice name to new choice
+                poll["end_time"] = time.time() + (60 * 60 * 24)  # Reset inactivity time
             else:  # I user hasn't voted yet
                 await res.send(content=f"You selected '**{res.values[0].capitalize()}**'")  # Send the user a confirmation message of their choice that only them can see
                 poll["users"][str(res.author.id)] = values[0]  # Set user's choice name to selected option
                 poll["options"][values[0]] += 1  # Add one to selected option count
                 poll["total"] += 1  # Add one to total singular votes
+                poll["end_time"] = time.time() + (60 * 60 * 24)  # Reset inactivity time
 
             with open("polls.json", "w") as f:  # Open polls.json in write mode
                 json.dump(polls, f, indent=4)  # Dump (write) new data (changes) into polls.json
@@ -391,6 +394,35 @@ async def get_poll():  # Gets all polls interactions
             if locked:  # Check if the locked parameter is True
                 em.set_footer(text="Une fois que vous avez fait votre choix vous ne pourrez plus le modifier. Réfléchissez !")  # If so we add a message to notify user
             await res.message.edit(embed=em)  # Then we sen the updated poll embed
+
+
+# CHECK POLL INACTIVITY
+@tasks.loop(minutes=5)
+async def check_poll_inactivity():
+    with open("polls.json", "r") as f:
+        polls = json.load(f)
+
+    for poll_guild in polls.keys():  # Iterate through every key of polls.json which are guild IDs
+        for poll_id in polls[poll_guild].keys():  # Iterate through every key of a guild's polls
+            poll = polls[poll_guild][poll_id]  # Get poll from dictionary
+            if poll["end_time"] < time.time():  # Check if inactivity timeout reached
+                message_id = poll_id  # We restore the key into a new variable for readability
+                channel = client.get_channel(poll["channel_id"])  # We get the channel object of the poll's channel
+                desc = poll_bar(poll_id, poll_guild)  # We call poll_bar to generate the bar for the final results
+
+                p_msg = await channel.fetch_message(message_id)  # We get the poll message as p_msg
+                await p_msg.delete()  # We delete the poll message
+
+                em = Embed(title=f"Results For Poll (ended because of inactivity) |\n{poll['title']}", description=desc, color=bot_color, timestamp=datetime.datetime.utcnow())  # Create a new embed to send the results of the poll
+                em.add_field(name="Total Sigular Answers", value=poll["total"])  # Add the number of total singular answers as a field
+
+                del polls[poll_guild][poll_id]  # We then delete the disctionary of the poll from the file
+
+                with open("polls.json", "w") as f:  # We open the polls.json file in write mode
+                    json.dump(polls, f, indent=4)  # Then we dump (write) the new data inside of it
+
+                await channel.send(embed=em)  # We send the result embed to the poll channel
+                get_poll.restart()  # And we restart the get_poll() task to update its variable of the polls.json file
 
 
 @slash.slash(name="Doc", description="Code Source, Manuel et Invitations", guild_ids=Guild_Manager.get_all_guilds())
