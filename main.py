@@ -404,8 +404,8 @@ async def check_poll_inactivity():
     with open("polls.json", "r") as f:
         polls = json.load(f)
 
-    for poll_guild in polls.keys():  # Iterate through every key of polls.json which are guild IDs
-        for poll_id in polls[poll_guild].keys():  # Iterate through every key of a guild's polls
+    for poll_guild in list(polls.keys()):  # Iterate through every key of polls.json which are guild IDs
+        for poll_id in list(polls[poll_guild].keys()):  # Iterate through every key of a guild's polls
             poll = polls[poll_guild][poll_id]  # Get poll from dictionary
             if poll["end_time"] < time.time():  # Check if inactivity timeout reached
                 message_id = poll_id  # We restore the key into a new variable for readability
