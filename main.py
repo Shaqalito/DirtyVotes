@@ -8,8 +8,9 @@ from discord_slash import SlashCommand
 from discord.ext import commands, tasks
 from keep_alive import keep_alive
 import discord
-from system import Guild_Manager, GuildErrors, time
+from system import Guild_Manager, GuildErrors
 import asyncio
+import time
 
 
 # Clear shortcut function
