@@ -399,7 +399,7 @@ async def get_poll():  # Gets all polls interactions
 
 
 # CHECK POLL INACTIVITY
-@tasks.loop(minutes=5)
+@tasks.loop(minutes=1)
 async def check_poll_inactivity():
     with open("polls.json", "r") as f:
         polls = json.load(f)
