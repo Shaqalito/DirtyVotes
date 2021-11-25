@@ -87,12 +87,8 @@ async def on_raw_message_delete(playload):
         for poll_id in list(polls[poll_guild].keys()):  # Iterate through every key of a guild's polls
             poll = polls[poll_guild][poll_id]  # Get poll from dictionary
             if playload.message_id == int(poll_id):  # Check if poll_id is equal to the id of the message that was deleted
-                message_id = poll_id  # We restore the key into a new variable for readability
                 channel = client.get_channel(poll["channel_id"])  # We get the channel object of the poll's channel
                 desc = poll_bar(poll_id, poll_guild)  # We call poll_bar to generate the bar for the final results
-
-                p_msg = await channel.fetch_message(message_id)  # We get the poll message as p_msg
-                await p_msg.delete()  # We delete the poll message
 
                 em = Embed(title=f"Results For Poll (POLL MESSAGE WAS DELETED) |\n{poll['title']}", description=desc, color=bot_color, timestamp=datetime.datetime.utcnow())  # Create a new embed to send the results of the poll
                 em.add_field(name="Total Sigular Answers", value=poll["total"])  # Add the number of total singular answers as a field
