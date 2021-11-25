@@ -420,11 +420,11 @@ async def check_poll_inactivity():
 
                 del polls[poll_guild][poll_id]  # We then delete the disctionary of the poll from the file
 
-                with open("polls.json", "w") as f:  # We open the polls.json file in write mode
-                    json.dump(polls, f, indent=4)  # Then we dump (write) the new data inside of it
-
                 await channel.send(embed=em)  # We send the result embed to the poll channel
-                get_poll.restart()  # And we restart the get_poll() task to update its variable of the polls.json file
+
+    with open("polls.json", "w") as f:  # We open the polls.json file in write mode
+        json.dump(polls, f, indent=4)  # Then we dump (write) the new data inside of it
+    get_poll.restart()  # And we restart the get_poll() task to update its variable of the polls.json file
 
 
 @slash.slash(name="Doc", description="Code Source, Manuel et Invitations", guild_ids=Guild_Manager.get_all_guilds())
