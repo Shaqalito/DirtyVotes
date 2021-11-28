@@ -299,7 +299,7 @@ async def end_poll(ctx):  # Command that lets you end polls that are stored in t
     with open("polls.json", "r") as f:  # Opening the polls.json file in read mode
         polls = json.load(f)  # Loading the file data into a python json readable object
 
-    if polls == {}:  # Checking if the file is empty (If there is no running polls)
+    if polls[str(sctx.author.guild.id)] == {}:  # Checking if the file is empty (If there is no running polls)
         em = Embed(title="There is no polls to end", color=bot_color)
         await sctx.send(embed=em, hidden=True)  # If so a message is sent to the user to notify them and we return to end the command
         return
