@@ -86,7 +86,7 @@ async def on_raw_message_delete(playload):
     for poll_guild in list(polls.keys()):  # Iterate through every key of polls.json which are guild IDs
         for poll_id in list(polls[poll_guild].keys()):  # Iterate through every key of a guild's polls
             poll = polls[poll_guild][poll_id]  # Get poll from dictionary
-            if playload.message_id == int(poll_id):  # Check if poll_id is equal to the id of the message that was deleted
+            if str(playload.message_id) == str(poll_id):  # Check if poll_id is equal to the id of the message that was deleted
                 channel = client.get_channel(poll["channel_id"])  # We get the channel object of the poll's channel
                 desc = poll_bar(poll_id, poll_guild)  # We call poll_bar to generate the bar for the final results
 
@@ -322,8 +322,11 @@ async def end_poll(ctx):  # Command that lets you end polls that are stored in t
     channel = client.get_channel(poll["channel_id"])  # We get the channel object of the poll's channel
     desc = poll_bar(key, sctx.guild.id)  # We call poll_bar to generate the bar for the final results
 
-    p_msg = await channel.fetch_message(message_id)  # We get the poll message as p_msg
-    await p_msg.delete()  # We delete the poll message
+    try:
+        p_msg = await channel.fetch_message(message_id)  # We get the poll message as p_msg
+        await p_msg.delete()  # We delete the poll message
+    except discord.errors.NotFound:
+        pass
 
     em = Embed(title=f"Result For Poll | {poll['title']}", description=desc, color=bot_color, timestamp=datetime.datetime.utcnow())  # Create a new embed to send the results of the poll
     em.add_field(name="Total Sigular Answers", value=poll["total"])  # Add the number of total singular answers as a field
@@ -432,6 +435,12 @@ async def check_poll_inactivity():
     for poll_guild in list(polls.keys()):  # Iterate through every key of polls.json which are guild IDs
         for poll_id in list(polls[poll_guild].keys()):  # Iterate through every key of a guild's polls
             poll = polls[poll_guild][poll_id]  # Get poll from dictionary
+            try:
+                channel = client.get_channel(poll["channel_id"])
+                p_msg = await channel.fetch_message(poll_id)
+            except discord.errors.NotFound:
+                del polls[poll_guild][poll_id]
+
             if poll["end_time"] < time.time():  # Check if inactivity timeout reached
                 message_id = poll_id  # We restore the key into a new variable for readability
                 channel = client.get_channel(poll["channel_id"])  # We get the channel object of the poll's channel
