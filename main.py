@@ -253,7 +253,7 @@ async def poll(ctx, title, choices, locked=False, hidden=False):
         for option in new_poll["options"].keys():  # For each choice no bar will show but only the 0% vote.
             desc += f"**{option.capitalize()}**\n**0%**\n\n"
 
-    em = Embed(title=title, description=desc, color=bot_color)  # We create our embed object with the title given in parameters and the description we just generated.
+    em = Embed(title=title if len(title) <= 250 else title[:250], description=desc, color=bot_color)  # We create our embed object with the title given in parameters and the description we just generated.
     if locked:  # Check if the locked parameter is True
         em.set_footer(text="Une fois que vous avez fait votre choix vous ne pourrez plus le modifier. Réfléchissez !")  # If so adds a footer to warn voters
     try:  # Try to send the message to the context
